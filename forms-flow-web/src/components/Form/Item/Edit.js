@@ -24,7 +24,7 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { formio_resourceBundles } from "../../../resourceBundles/formio_resourceBundles";
 import { clearFormError } from "../../../actions/formActions";
-import { addTenankeyToPath } from "../../../helper/helper";
+import { addTenankey, removeTenantKey } from "../../../helper/helper";
 const reducer = (form, { type, value }) => {
   const formCopy = _cloneDeep(form);
   switch (type) {
@@ -79,14 +79,21 @@ const Edit = React.memo(() => {
   //remove tenatkey form path name
   useEffect(()=>{
     if(form.path && MULTITENANCY_ENABLED){
-      let newFormPath = form.path.split('-');
-      let tenantId = newFormPath.shift();
-      if(tenantId === tenantKey){
-        newFormPath = newFormPath.join("-");
-        dispatchFormAction({type:'path',value:newFormPath});
+       const checkIfExist = removeTenantKey(form.path,tenantKey);
+      if(checkIfExist.valueWithTenantKey){
+        dispatchFormAction({type:'path',value:checkIfExist.newValue});
       }
     }
   },[form.path]);
+  // remove tenant key from form name
+  useEffect(()=>{
+    if(form.name && MULTITENANCY_ENABLED){
+      const checkIfExist = removeTenantKey(form.name,tenantKey);
+      if(checkIfExist.valueWithTenantKey){
+        dispatchFormAction({type:'name',value:checkIfExist.newValue});
+      }
+    }
+  },[form.name]);
 
   // setting the form data
   useEffect(() => {
@@ -113,9 +120,13 @@ const Edit = React.memo(() => {
   useEffect(() => {
     FORM_ACCESS.forEach((role) => {
       if (processListData.anonymous) {
-        role.roles.push(ANONYMOUS_ID);
+        if (role.type === "read_all") {
+          role.roles.push(ANONYMOUS_ID);
+        }
       } else {
-        role.roles = role.roles.filter((id) => id !== ANONYMOUS_ID);
+        if (role.type === "read_all") {
+          role.roles = role.roles.filter((id) => id !== ANONYMOUS_ID);
+        }
       }
     });
 
@@ -159,7 +170,8 @@ const Edit = React.memo(() => {
     newFormData.submissionAccess = SUBMISSION_ACCESS;
     newFormData.access = FORM_ACCESS;
     if (MULTITENANCY_ENABLED && tenantKey) {
-      newFormData.path = addTenankeyToPath(newFormData.path,tenantKey);
+      newFormData.path = addTenankey(newFormData.path,tenantKey);
+      newFormData.name = addTenankey(newFormData.name,tenantKey);
     }
     dispatch(
       saveForm("form", newFormData, (err, submittedData) => {
@@ -208,13 +220,22 @@ const Edit = React.memo(() => {
     );
   };
 
+  // information about tenant key adding
+
+  const addingTenantKeyInformation = (type)=>{
+    if(MULTITENANCY_ENABLED){
+      return <span className="ml-1">
+        <i className="fa fa-info-circle text-primary cursor-pointer" data-toggle="tooltip" title={`Tenant Key will be added into ${type}`}></i>
+      </span>;
+    }
+  };
+
   // setting the main option details to the formdata
   const handleChange = (path, event) => {
     const { target } = event;
     const value = target.type === "checkbox" ? target.checked : target.value;
 
-      dispatchFormAction({ type: path, value });
-    
+    dispatchFormAction({ type: path, value });
   };
 
   const formChange = (newForm) =>
@@ -311,6 +332,7 @@ const Edit = React.memo(() => {
             <div id="form-group-name" className="form-group">
               <label htmlFor="name" className="control-label field-required">
                 <Translation>{(t) => t("Name")}</Translation>
+                {addingTenantKeyInformation('Name')}
               </label>
               <input
                 type="text"
@@ -372,6 +394,7 @@ const Edit = React.memo(() => {
             <div id="form-group-path" className="form-group">
               <label htmlFor="path" className="control-label field-required">
                 <Translation>{(t) => t("Path")}</Translation>
+                {addingTenantKeyInformation('Path')}
               </label>
               <div className="input-group">
                 <input
@@ -380,7 +403,7 @@ const Edit = React.memo(() => {
                   id="path"
                   placeholder="example"
                   style={{ textTransform: "lowercase", width: "120px" }}
-                  value={ form.path || ""}
+                  value={form.path || ""}
                   onChange={(event) => handleChange("path", event)}
                 />
               </div>

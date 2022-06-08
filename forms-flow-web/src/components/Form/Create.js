@@ -17,7 +17,7 @@ import { toast } from "react-toastify";
 import { useTranslation, Translation } from "react-i18next";
 import { formio_resourceBundles } from "../../resourceBundles/formio_resourceBundles";
 import { clearFormError } from "../../actions/formActions";
-import { addTenankeyToPath } from "../../helper/helper";
+import { addTenankey } from "../../helper/helper";
 
 // reducer from react-formio code
 const reducer = (form, { type, value }) => {
@@ -66,9 +66,13 @@ const Create = React.memo(() => {
   useEffect(() => {
     FORM_ACCESS.forEach((role) => {
       if (anonymous) {
-        role.roles.push(ANONYMOUS_ID);
+        if (role.type === "read_all") {
+          role.roles.push(ANONYMOUS_ID);
+        }
       } else {
-        role.roles = role.roles.filter((id) => id !== ANONYMOUS_ID);
+        if (role.type === "read_all") {
+          role.roles = role.roles.filter((id) => id !== ANONYMOUS_ID);
+        }
       }
     });
     SUBMISSION_ACCESS.forEach((access) => {
@@ -83,6 +87,16 @@ const Create = React.memo(() => {
       }
     });
   }, [anonymous]);
+
+  // information about tenant key adding
+
+  const addingTenantKeyInformation = (type)=>{
+    if(MULTITENANCY_ENABLED){
+      return <span className="ml-1">
+        <i className="fa fa-info-circle text-primary cursor-pointer"  data-toggle="tooltip" title={`Tenant Key will be added into ${type}`}></i>
+      </span>;
+    }
+  };
 
   // setting the form data
   useEffect(() => {
@@ -106,7 +120,8 @@ const Create = React.memo(() => {
     newForm.access = FORM_ACCESS;
     if (MULTITENANCY_ENABLED && tenantKey) {
       newForm.tenantKey = tenantKey;
-      newForm.path = addTenankeyToPath(newForm.path,tenantKey);
+      newForm.path = addTenankey(newForm.path, tenantKey);
+      newForm.name = addTenankey(newForm.name, tenantKey);
     }
     dispatch(
       saveForm("form", newForm, (err, form) => {
@@ -182,6 +197,7 @@ const Create = React.memo(() => {
             <div id="form-group-name" className="form-group">
               <label htmlFor="name" className="control-label field-required">
                 <Translation>{(t) => t("Name")}</Translation>
+                {addingTenantKeyInformation('Name')}
               </label>
               <input
                 type="text"
@@ -243,6 +259,7 @@ const Create = React.memo(() => {
             <div id="form-group-path" className="form-group">
               <label htmlFor="path" className="control-label field-required">
                 <Translation>{(t) => t("Path")}</Translation>
+                {addingTenantKeyInformation('Path')}
               </label>
               <div className="input-group">
                 <input
