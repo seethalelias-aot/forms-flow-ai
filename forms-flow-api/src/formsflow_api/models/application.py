@@ -425,10 +425,9 @@ class Application(
         page_no: int,
         limit: int,
         form_name: str,
-        order_by: str,
-        sort_order: str,
     ):
         """Fetch aggregated applications ordered by created date."""
+        print("models.....")
         result_proxy = (
             db.session.query(
                 Application.form_process_mapper_id,
@@ -452,22 +451,14 @@ class Application(
                 FormProcessMapper.version,
             )
         )
+        print(result_proxy, "first result")
         if form_name:
             result_proxy = result_proxy.filter(
                 FormProcessMapper.form_name.ilike(f"%{form_name}%")
             )
-        order_by, sort_order = validate_sort_order_and_order_by(order_by, sort_order)
-        if order_by and sort_order:
-            table_name = "application"
-            if order_by == "form_name":
-                table_name = "form_process_mapper"
-            result_proxy = result_proxy.order_by(
-                text(f"{table_name}.{order_by} {sort_order}")
-            )
         pagination = result_proxy.paginate(page_no, limit)
         total_count = result_proxy.count()
         result_proxy = cls.tenant_authorization(result_proxy)
-        # return [dict(row) for row in result_proxy]
         return pagination.items, total_count
 
     @classmethod
@@ -478,8 +469,6 @@ class Application(
         page_no: int,
         limit: int,
         form_name: str,
-        order_by: str,
-        sort_order: str,
     ):
         """Fetch aggregated applications ordered by created date."""
         result_proxy = (
@@ -509,20 +498,11 @@ class Application(
             result_proxy = result_proxy.filter(
                 FormProcessMapper.form_name.ilike(f"%{form_name}%")
             )
-        order_by, sort_order = validate_sort_order_and_order_by(order_by, sort_order)
-        if order_by and sort_order:
-            table_name = "application"
-            if order_by == "form_name":
-                table_name = "form_process_mapper"
-            result_proxy = result_proxy.order_by(
-                text(f"{table_name}.{order_by} {sort_order}")
-            )
         pagination = result_proxy.paginate(page_no, limit)
         total_count = result_proxy.count()
         result_proxy = cls.tenant_authorization(result_proxy)
-
         return pagination.items, total_count
-        # return [dict(row) for row in result_proxy]
+
 
     @classmethod
     def find_aggregated_application_status(
