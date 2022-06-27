@@ -39,14 +39,17 @@ class AggregatedApplicationsResource(Resource):
             page_no = dict_data.get("page_no")
             limit = dict_data.get("limit")
             form_name = dict_data.get("form_name")
+            sort_by = dict_data.get("sort_by")
+            sort_order = dict_data.get("sort_order")
             if order_by == MetricsState.MODIFIED.value:
-                print("modified....", MetricsState.MODIFIED.value)
                 metrics_schema, metrics_count = AS.get_aggregated_applications_modified(
                     from_date=from_date,
                     to_date=to_date,
                     page_no=page_no,
                     limit=limit,
                     form_name=form_name,
+                    sort_by=sort_by,
+                    sort_order=sort_order,
                 )
             else:
                 metrics_schema, metrics_count = AS.get_aggregated_applications(
@@ -55,6 +58,8 @@ class AggregatedApplicationsResource(Resource):
                     page_no=page_no,
                     limit=limit,
                     form_name=form_name,
+                    sort_by=sort_by,
+                    sort_order=sort_order,
                 )
             return (
                 {

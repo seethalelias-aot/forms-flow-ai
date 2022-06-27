@@ -307,15 +307,18 @@ class ApplicationService:
         page_no: int,
         limit: int,
         form_name: str,
+        sort_by: str,
+        sort_order: str,
     ):
         """Get aggregated applications."""
-        print("services....")
         applications, get_all_metrics_count = Application.find_aggregated_applications(
             from_date=from_date,
             to_date=to_date,
             page_no=page_no,
             limit=limit,
             form_name=form_name,
+            sort_by=sort_by,
+            sort_order=sort_order,
         )
         schema = AggregatedApplicationSchema(exclude=("application_status",))
         return (
@@ -330,6 +333,8 @@ class ApplicationService:
         page_no: int,
         limit: int,
         form_name: str,
+        sort_by: str,
+        sort_order: str,
     ):
         """Get aggregated applications."""
         (
@@ -341,6 +346,8 @@ class ApplicationService:
             page_no=page_no,
             limit=limit,
             form_name=form_name,
+            sort_by=sort_by,
+            sort_order=sort_order,
         )
         schema = AggregatedApplicationSchema(exclude=("application_status",))
         return (
