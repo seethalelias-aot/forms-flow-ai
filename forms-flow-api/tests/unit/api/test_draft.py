@@ -8,5 +8,6 @@ def test_draft_create_method(app, client, session, jwt):
     token = get_token(jwt)
     headers = {"Authorization": f"Bearer {token}", "content-type": "application/json"}
     response = client.post("/draft", headers=headers, json=get_draft_create_payload())
+    print(response.text)
     assert response.status_code == 201
     assert response.json.get("id") is not None
