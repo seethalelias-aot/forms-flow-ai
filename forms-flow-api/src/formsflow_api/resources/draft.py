@@ -59,7 +59,7 @@ class DraftResource(Resource):
         except BaseException as draft_err:  # pylint: disable=broad-except
             response, status = {
                 "type": "Bad request error",
-                "message": "Invalid submission request passed",
+                "message": draft_err,
             }, HTTPStatus.BAD_REQUEST
             current_app.logger.warning(response)
             current_app.logger.warning(draft_err)
