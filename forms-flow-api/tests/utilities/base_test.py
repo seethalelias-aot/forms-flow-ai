@@ -140,6 +140,15 @@ def update_dashboard_payload():
         ]
     }
 
+def get_draft_create_payload():
+    """Return a payload for creating draft details."""
+    return {
+        "applicationStatus":"Draft",
+        "formId": "6299cf76f4fd4797a3238a0b",
+        "data":{
+            "name":"palthujanavar."
+        }
+    }
 
 def get_locale_update_valid_payload():
     """Returns a payload for updating the locale attribute."""
