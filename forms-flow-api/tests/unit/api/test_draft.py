@@ -1,6 +1,11 @@
 """Test suite for draft API endpoint."""
 
-from tests.utilities.base_test import get_draft_create_payload, get_token, get_application_create_payload, get_form_request_payload
+from tests.utilities.base_test import (
+    get_draft_create_payload, 
+    get_token, 
+    get_application_create_payload, 
+    get_form_request_payload
+)
 
 def test_draft_list(app, client, session, jwt):
     """Testing draft listing API."""
