@@ -72,7 +72,6 @@ def test_draft_update_details_api(app, client, session, jwt):
     response = client.post("/draft", headers=headers, json=get_draft_create_payload(form_id))
     assert response.status_code == 201
     draft_id = response.json.get("id")
-    assert rv != {}
     rv = client.get(f"/draft/{draft_id}", headers=headers)
     payload = rv.json
     payload["data"] = {"name": "sample"}
