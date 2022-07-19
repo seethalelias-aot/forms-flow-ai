@@ -145,7 +145,7 @@ def get_draft_create_payload():
     """Return a payload for creating draft details."""
     return {
         "applicationStatus": "Draft",
-        "formId": "6299cf76f4fd4797a3238a0b",
+        "formId": "1234",
         "data": {"name": "palthujanavar."},
     }
 
