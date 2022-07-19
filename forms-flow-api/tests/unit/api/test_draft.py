@@ -1,6 +1,6 @@
 """Test suite for draft API endpoint."""
 
-from tests.utilities.base_test import get_draft_create_payload, get_token, get_application_create_payload, get_form_request_payload
+from tests.utilities.base_test import get_draft_create_payload, get_token, get_application_create_payload, get_form_request_payload, get_draft_form_request_payload
 
 def test_draft_list(app, client, session, jwt):
     """Testing draft listing API."""
@@ -58,7 +58,7 @@ def test_draft_update_details_api(app, client, session, jwt):
         "Authorization": f"Bearer {token}",
         "content-type": "application/json",
     }
-    rv = client.post("/form", headers=headers, json=get_form_request_payload())
+    rv = client.post("/form", headers=headers, json=get_draft_form_request_payload())
     assert rv.status_code == 201
 
     form_id = rv.json.get("formId")

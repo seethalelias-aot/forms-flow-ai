@@ -66,6 +66,16 @@ def get_form_request_payload():
     }
 
 
+def get_draft_form_request_payload():
+    """Return a form request payload object."""
+    return {
+        "formId": "1234",
+        "formName": "Sample form",
+        "status": "draft",
+        "data": {"name": "sample"},
+    }
+
+
 def get_form_request_payload_private():
     """Return a form request payload object which is not anonymous."""
     return {
