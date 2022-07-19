@@ -74,6 +74,6 @@ def test_draft_update_details_api(app, client, session, jwt):
     draft_id = response.json.get("id")
     rv = client.get(f"/draft/{draft_id}", headers=headers)
     assert rv.status_code == 200
-    rv = client.put(f"/draft/{draft_id}", headers=headers)
+    rv = client.put(f"/draft/{draft_id}", headers=headers, json=get_draft_create_payload(form_id))
     assert rv.status_code == 200
     assert rv.json == "Updated successfully"
