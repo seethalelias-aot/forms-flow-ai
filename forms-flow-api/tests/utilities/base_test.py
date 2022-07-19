@@ -141,11 +141,11 @@ def update_dashboard_payload():
     }
 
 
-def get_draft_create_payload():
+def get_draft_create_payload(form_id: str = "1234"):
     """Return a payload for creating draft details."""
     return {
         "applicationStatus": "Draft",
-        "formId": "1234",
+        "formId": form_id,
         "data": {"name": "palthujanavar."},
     }
 
