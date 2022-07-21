@@ -91,3 +91,27 @@ def test_metrics_detailed_view(orderBy, app, client, session, jwt):
     )
     assert rv.status_code == 200
     assert rv.json["applications"]
+
+
+@pytest.mark.parametrize(("orderBy", "pageNo", "limit"), (("created", 1, 5), ("modified", 1, 10), ("created", 1, 20)) )
+def test_metrics_paginated_list(orderBy, pageNo, limit, app, client, session, jwt):
+    """Tests API/metrics endpoint with valid data."""
+    token = get_token(jwt)
+    headers = {"Authorization": f"Bearer {token}", "content-type": "application/json"}
+
+    rv = client.post("/form", headers=headers, json=get_form_request_payload())
+    assert rv.status_code == 201
+    form_id = rv.json.get("formId")
+
+    rv = client.post(
+        "/application/create",
+        headers=headers,
+        json=get_application_create_payload(form_id),
+    )
+    assert rv.status_code == 201
+
+    rv = client.get(
+        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}", headers=headers
+    )
+    assert rv.status_code == 200
+    assert len(rv.json.get("applications")) == 1
