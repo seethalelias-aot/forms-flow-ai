@@ -115,3 +115,51 @@ def test_metrics_paginated_list(orderBy, pageNo, limit, app, client, session, jw
     )
     assert rv.status_code == 200
     assert len(rv.json.get("applications")) == 1
+
+
+@pytest.mark.parametrize(("orderBy", "pageNo", "limit", "sortBy", "sortOrder"), (("created", 1, 5, "formName", "asc"), ("modified", 1, 10, "formName", "desc"), ("created", 1, 20, "formName", "asc")) )
+def test_metrics_paginated_sorted_list(orderBy, pageNo, limit, sortBy, sortOrder, app, client, session, jwt):
+    """Tests API/metrics endpoint with valid data."""
+    token = get_token(jwt)
+    headers = {"Authorization": f"Bearer {token}", "content-type": "application/json"}
+
+    rv = client.post("/form", headers=headers, json=get_form_request_payload())
+    assert rv.status_code == 201
+    form_id = rv.json.get("formId")
+
+    rv = client.post(
+        "/application/create",
+        headers=headers,
+        json=get_application_create_payload(form_id),
+    )
+    assert rv.status_code == 201
+
+    rv = client.get(
+        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}&sortBy={sortBy}&sortOrder={sortOrder}", headers=headers
+    )
+    assert rv.status_code == 200
+    assert len(rv.json.get("applications")) == 1
+
+
+@pytest.mark.parametrize(("orderBy", "pageNo", "limit", "formName"), (("created", 1, 5, "Sample"), ("modified", 1, 10, "form"), ("created", 1, 20, "sample form")) )
+def test_metrics_paginated_filtered_list(orderBy, pageNo, limit, formName, app, client, session, jwt):
+    """Tests API/metrics endpoint with valid data."""
+    token = get_token(jwt)
+    headers = {"Authorization": f"Bearer {token}", "content-type": "application/json"}
+
+    rv = client.post("/form", headers=headers, json=get_form_request_payload())
+    assert rv.status_code == 201
+    form_id = rv.json.get("formId")
+
+    rv = client.post(
+        "/application/create",
+        headers=headers,
+        json=get_application_create_payload(form_id),
+    )
+    assert rv.status_code == 201
+
+    rv = client.get(
+        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}&formName={formName}", headers=headers
+    )
+    assert rv.status_code == 200
+    assert len(rv.json.get("applications")) == 1
