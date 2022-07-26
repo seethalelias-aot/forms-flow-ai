@@ -93,7 +93,8 @@ def test_metrics_detailed_view(orderBy, app, client, session, jwt):
     assert rv.json["applications"]
 
 
-@pytest.mark.parametrize(("orderBy", "pageNo", "limit"), (("created", 1, 5), ("modified", 1, 10), ("created", 1, 20)) )
+@pytest.mark.parametrize("orderBy", METRICS_ORDER_BY_VALUES)
+@pytest.mark.parametrize(("pageNo", "limit"), ((1, 5), (1, 10), (1, 20)))
 def test_metrics_paginated_list(orderBy, pageNo, limit, app, client, session, jwt):
     """Tests API/metrics endpoint with valid data."""
     token = get_token(jwt)
@@ -111,14 +112,24 @@ def test_metrics_paginated_list(orderBy, pageNo, limit, app, client, session, jw
     assert rv.status_code == 201
 
     rv = client.get(
-        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}", headers=headers
+        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}",
+        headers=headers,
     )
     assert rv.status_code == 200
-    assert len(rv.json.get("applications")) == 1
 
 
-@pytest.mark.parametrize(("orderBy", "pageNo", "limit", "sortBy", "sortOrder"), (("created", 1, 5, "formName", "asc"), ("modified", 1, 10, "formName", "desc"), ("created", 1, 20, "formName", "asc")) )
-def test_metrics_paginated_sorted_list(orderBy, pageNo, limit, sortBy, sortOrder, app, client, session, jwt):
+@pytest.mark.parametrize("orderBy", METRICS_ORDER_BY_VALUES)
+@pytest.mark.parametrize(
+    ("pageNo", "limit", "sortBy", "sortOrder"),
+    (
+        (1, 5, "formName", "asc"),
+        (1, 10, "formName", "desc"),
+        (1, 20, "formName", "desc"),
+    ),
+)
+def test_metrics_paginated_sorted_list(
+    orderBy, pageNo, limit, sortBy, sortOrder, app, client, session, jwt
+):
     """Tests API/metrics endpoint with valid data."""
     token = get_token(jwt)
     headers = {"Authorization": f"Bearer {token}", "content-type": "application/json"}
@@ -135,14 +146,24 @@ def test_metrics_paginated_sorted_list(orderBy, pageNo, limit, sortBy, sortOrder
     assert rv.status_code == 201
 
     rv = client.get(
-        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}&sortBy={sortBy}&sortOrder={sortOrder}", headers=headers
+        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}&sortBy={sortBy}&sortOrder={sortOrder}",
+        headers=headers,
     )
     assert rv.status_code == 200
-    assert len(rv.json.get("applications")) == 1
 
 
-@pytest.mark.parametrize(("orderBy", "pageNo", "limit", "formName"), (("created", 1, 5, "Sample"), ("modified", 1, 10, "form"), ("created", 1, 20, "sample form")) )
-def test_metrics_paginated_filtered_list(orderBy, pageNo, limit, formName, app, client, session, jwt):
+@pytest.mark.parametrize("orderBy", METRICS_ORDER_BY_VALUES)
+@pytest.mark.parametrize(
+    ("pageNo", "limit", "formName"),
+    (
+        (1, 5, "sample"),
+        (1, 10, "form"),
+        (1, 20, "sampleform"),
+    ),
+)
+def test_metrics_paginated_filtered_list(
+    orderBy, pageNo, limit, formName, app, client, session, jwt
+):
     """Tests API/metrics endpoint with valid data."""
     token = get_token(jwt)
     headers = {"Authorization": f"Bearer {token}", "content-type": "application/json"}
@@ -159,7 +180,7 @@ def test_metrics_paginated_filtered_list(orderBy, pageNo, limit, formName, app, 
     assert rv.status_code == 201
 
     rv = client.get(
-        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}&formName={formName}", headers=headers
+        f"/metrics?from={today}&to={tomorrow}&orderBy={orderBy}&pageNo={pageNo}&limit={limit}&formName={formName}",
+        headers=headers,
     )
     assert rv.status_code == 200
-    assert len(rv.json.get("applications")) == 1
