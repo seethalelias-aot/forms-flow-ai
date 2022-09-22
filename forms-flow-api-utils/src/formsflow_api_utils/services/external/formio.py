@@ -112,9 +112,10 @@ class FormioService:
 
     def post_submission(self, data, formio_token):
         """Post request to formio API to create submission details."""
+        print("submission entering...")
         headers = {"Content-Type": "application/json", "x-jwt-token": formio_token}
         url = (
-            f"{self.base_url}/form/{data['formId']}/submission"
+            f"{self.base_url}/form/"+ data["form_id"] + "/submission"
         )
         response = requests.post(url, headers=headers, data=json.dumps(data["data"]))
         if response.ok:
