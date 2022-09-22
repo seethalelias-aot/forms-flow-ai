@@ -368,7 +368,7 @@ class ApplicationResourceByApplicationStatus(Resource):
 
 
 @cors_preflight("POST,OPTIONS")
-@API.route("/create-application", methods=["POST", "OPTIONS"])
+@API.route("/external/create", methods=["POST", "OPTIONS"])
 class ApplicationCreation(Resource):
     """Resource for application creation."""
 
@@ -390,10 +390,7 @@ class ApplicationCreation(Resource):
             dict_data = application_schema.load(application_json)
             formio_service = FormioService()
             form_io_token = formio_service.get_formio_access_token()
-            print(form_io_token, "token")
-            print("data", data)
             formio_data = formio_service.post_submission(data, form_io_token)
-            print(formio_data, "data")
             dict_data["submission_id"] = formio_data["_id"]
             dict_data[
                 "form_url"
@@ -425,11 +422,11 @@ class ApplicationCreation(Resource):
             current_app.logger.warning(response)
             current_app.logger.warning(err)
             return response, status
-        # except BaseException as application_err:  # pylint: disable=broad-except
-        #     response, status = {
-        #         "type": "Bad request error",
-        #         "message": "Invalid application request passed",
-        #     }, HTTPStatus.BAD_REQUEST
-        #     current_app.logger.warning(response)
-        #     current_app.logger.warning(application_err)
-        #     return response, status
+        except BaseException as application_err:  # pylint: disable=broad-except
+            response, status = {
+                "type": "Bad request error",
+                "message": "Invalid application request passed",
+            }, HTTPStatus.BAD_REQUEST
+            current_app.logger.warning(response)
+            current_app.logger.warning(application_err)
+            return response, status
