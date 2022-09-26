@@ -118,11 +118,11 @@ def get_application_create_payload(form_id: str = "1234"):
     }
 
 
-def get_application_create_with_formio_submission_payload(form_id: str = "1234"):
+def get_application_create_with_formio_submission_payload():
     "Returns an application with formio submission data"
     return {
-        "data":{"textField":"testing","textArea":"sampl","applicationId":"","applicationStatus":""},
-        "formId":"1234"
+        "formId":"1234",
+        "data":{"textField":"testing","textArea":"sampl","applicationId":"","applicationStatus":""} 
     }
 
 

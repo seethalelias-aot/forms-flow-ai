@@ -313,14 +313,16 @@ def test_application_create_with_formio_submission_method(app, client, session, 
         "Authorization": f"Bearer {token}",
         "content-type": "application/json",
     }
-    rv = client.post("/form", headers=headers, json=get_form_request_payload())
-    assert rv.status_code == 201
+    # rv = client.post("/form", headers=headers, json=get_form_request_payload())
+    # assert rv.status_code == 201
 
-    form_id = rv.json.get("formId")
+    # form_id = rv.json.get("formId")
 
     rv = client.post(
         "/application/external/create",
         headers=headers,
-        json=get_application_create_with_formio_submission_payload(form_id),
+        json=get_application_create_with_formio_submission_payload(),
     )
     assert rv.status_code == 201
+    
+    
