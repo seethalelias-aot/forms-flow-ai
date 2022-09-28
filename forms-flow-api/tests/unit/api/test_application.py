@@ -5,6 +5,7 @@ from tests.utilities.base_test import (
     get_application_create_payload,
     get_draft_create_payload,
     get_form_request_payload,
+    get_application_create_with_submission_payload,
     get_token,
 )
 
@@ -303,3 +304,23 @@ def test_application_update_details_api(app, client, session, jwt):
     assert application.status_code == 200
     assert application.json.get("formId") == "980"
     assert application.json.get("submissionId") == "1234"
+
+
+def test_application_create_method_with_submission(app, client, session, jwt):
+    """Tests the application create method with valid payload."""
+    token = get_token(jwt)
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "content-type": "application/json",
+    }
+    rv = client.post("/form", headers=headers, json=get_form_request_payload())
+    assert rv.status_code == 201
+
+    form_id = rv.json.get("formId")
+
+    rv = client.post(
+        "/application/external/create",
+        headers=headers,
+        json=get_application_create_with_submission_payload(form_id),
+    )
+    assert rv.status_code == 201

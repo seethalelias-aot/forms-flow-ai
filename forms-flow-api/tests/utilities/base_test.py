@@ -56,6 +56,14 @@ def get_token(
     )
 
 
+def get_application_create_with_submission_payload(form_id: str = "1234"):
+    """Returns an application create payload."""
+    return {
+        "data":{"textField":"dummy","applicationId":"1234","applicationStatus":"new"},
+        "formId": "1234",
+        }
+
+
 def get_form_request_payload():
     """Return a form request payload object."""
     return {
@@ -82,6 +90,7 @@ def get_form_request_payload_private():
         "tenant": 11,
         "anonymous": False,
     }
+
 
 
 def get_form_request_payload_public_inactive():
@@ -115,6 +124,14 @@ def get_application_create_payload(form_id: str = "1234"):
         "submissionId": "1233432",
         "formUrl": f"http://sample.com/form/{form_id}/submission/1233432",
         "webFormUrl": f"http://sample.com/form/{form_id}/submission/1233432"
+    }
+
+
+def get_application_create_with_formio_submission_payload():
+    "Returns an application with formio submission data"
+    return {
+        "formId":"1234",
+        "data":{"textField":"testing","textArea":"sampl","applicationId":"","applicationStatus":""} 
     }
 
 
