@@ -390,6 +390,7 @@ class ApplicationCreation(Resource):
             formio_service = FormioService()
             form_io_token = formio_service.get_formio_access_token()
             formio_data = formio_service.post_submission(data, form_io_token)
+            print("formiodata", formio_data)
             application_data["submission_id"] = formio_data["_id"]
             application_data[
                 "form_url"
