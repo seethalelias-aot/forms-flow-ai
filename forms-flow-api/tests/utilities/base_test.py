@@ -75,6 +75,9 @@ def get_application_create_with_submission_payload(form_id: str = "1234"):
     return {
         "data": {"textField": "Cannavila", "textArea": "fdj", "applicationId": "", "applicationStatus": "", "number": 4},
         "formId": form_id,
+        "submissionId": "1233432",
+        "formUrl": f"http://sample.com/form/{form_id}/submission/1233432",
+        "webFormUrl": f"http://sample.com/form/{form_id}/submission/1233432"
     }
 
 
