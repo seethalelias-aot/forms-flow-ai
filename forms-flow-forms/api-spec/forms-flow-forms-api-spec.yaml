@@ -172,6 +172,74 @@ paths:
                     externalIds: []
                     created: '2022-05-26T05:23:46.195Z'
                     modified: '2022-05-26T05:23:46.197Z'
+  /application/external/create:
+    post:
+      tags:
+        - default
+      summary: Create application with formio data
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              example:
+                data:
+                  textField: Cannavila
+                  textArea: fdj
+                  submit: true
+                  applicationId: ''
+                  applicationStatus: ''
+                  number: 4
+                formId: 63314e04674cdcaca7caace2
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: CREATED
+          headers:
+            Server:
+              schema:
+                type: string
+                example: gunicorn
+            Date:
+              schema:
+                type: string
+                example: Thu, 06 Oct 2022 11:57:02 GMT
+            Connection:
+              schema:
+                type: string
+                example: keep-alive
+            Content-Type:
+              schema:
+                type: string
+                example: application/json
+            Content-Length:
+              schema:
+                type: integer
+                example: '425'
+            X-Frame-Options:
+              schema:
+                type: string
+                example: DENY
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+                example: '*'
+          content:
+            application/json:
+              schema:
+                type: object
+              example:
+                createdBy: formsflow-reviewer
+                formId: 63314e04674cdcaca7caace2
+                created: '2022-10-06 11:57:01.983526'
+                formProcessMapperId: '16'
+                id: 37
+                modified: '2022-10-06 11:57:02.657229'
+                applicationStatus: Completed
+                modifiedBy: service-account-forms-flow-bpm
+                submissionId: 633ec28daac7ae7d51567da4
+                processInstanceId: fd5151d6-456d-11ed-b5d7-0242ac150008
   /form:
     post:
       tags:

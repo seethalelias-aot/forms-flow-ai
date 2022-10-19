@@ -70,6 +70,17 @@ def get_form_request_payload():
     }
 
 
+def get_application_create_with_submission_payload(form_id: str = "1234"):
+    """Returns an application create payload."""
+    return {
+        "data": {"textField": "Cannavila", "textArea": "fdj", "applicationId": "", "applicationStatus": "", "number": 4},
+        "formId": form_id,
+        "submissionId": "1233432",
+        "formUrl": f"http://sample.com/form/{form_id}/submission/1233432",
+        "webFormUrl": f"http://sample.com/form/{form_id}/submission/1233432"
+    }
+
+
 def get_form_request_payload_private():
     """Return a form request payload object which is not anonymous."""
     return {
